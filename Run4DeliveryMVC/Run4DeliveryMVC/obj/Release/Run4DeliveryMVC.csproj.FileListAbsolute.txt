@@ -1,0 +1,7 @@
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\bin\Run4DeliveryMVC.dll
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\bin\Run4DeliveryMVC.pdb
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\bin\EntityFramework.dll
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\bin\EntityFramework.xml
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\obj\Release\Run4DeliveryMVC.csprojResolveAssemblyReference.cache
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\obj\Release\Run4DeliveryMVC.dll
+C:\VS_Projects_2010\Run4DeliveryMVC\Run4DeliveryMVC\obj\Release\Run4DeliveryMVC.pdb
