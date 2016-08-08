@@ -194,6 +194,36 @@ namespace Run4DeliveryMVC.Controllers
 
         private static bool ValidateUser(string userName, string passWord)
         {
+            try
+            {
+                using (ksalomon_listEntities db = new ksalomon_listEntities())
+                {
+                    Member member = (from m in db.Members where m.Email == userName && m.Password == passWord select m).FirstOrDefault();
+                    if (member != null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Add error handling here for debugging.
+                // This error message should not be sent back to the caller.
+                //System.Diagnostics.Trace.WriteLine("[ValidateUser] Exception " + ex.Message);
+                //LogErrorDB("0", "Login Exception: " + ex.ToString(), "ERROR_LOGON");
+                //lblMsg.Text = ex.ToString();
+                return false;
+            }
+
+            
+        }
+
+        /*private static bool ValidateUser(string userName, string passWord)
+        {
             SqlConnection conn;
             SqlCommand cmd;
             string lookupPassword = null;
@@ -242,7 +272,7 @@ namespace Run4DeliveryMVC.Controllers
                 //LogErrorDB("0", "Failed Login: " + userName + " " + passWord, "ERROR_LOGON");
                 return false;
             }
-        }
+        }*/
         
 
         #region Status Codes
