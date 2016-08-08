@@ -86,6 +86,7 @@ namespace Run4DeliveryMVC.Controllers
                 //MembershipCreateStatus createStatus;
                 //Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
 
+
                 //New Member
                 string queryStringCommand = "insert into [ksalomon_list].[ksalo_list].[Member] (FirstName, LastName, Address, Address2, " +
                 "City, State, Zip, Email, Password, PhoneMobile, PhoneHome, PhoneBusiness, OrderID, DateCreated, DateUpdated) " +
