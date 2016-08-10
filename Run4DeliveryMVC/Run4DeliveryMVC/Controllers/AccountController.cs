@@ -45,7 +45,8 @@ namespace Run4DeliveryMVC.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        //return RedirectToAction("Index", "Home");                        
+                        return Redirect("http://run4delivery.com/ShoppingList.aspx");
                     }
                 }
                 else
@@ -113,7 +114,8 @@ namespace Run4DeliveryMVC.Controllers
                         db.SaveChanges();
                                                 
                         FormsAuthentication.SetAuthCookie(model.Email, false);
-                        return RedirectToAction("Index", "Home");                        
+                        //return RedirectToAction("Index", "Home");   
+                        return Redirect("http://run4delivery.com/ShoppingList.aspx");
                     }
                     catch (Exception e)
                     {
@@ -205,11 +207,9 @@ namespace Run4DeliveryMVC.Controllers
                 //LogErrorDB("0", "Login Exception: " + ex.ToString(), "ERROR_LOGON");
                 //lblMsg.Text = ex.ToString();
                 return false;
-            }
-
-            
+            }            
         }
-
+        
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
