@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using Run4DeliveryMVC.Models;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 using System.Data;
 using System.Data.SqlClient;
@@ -82,62 +84,48 @@ namespace Run4DeliveryMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Attempt to register the user
-                //MembershipCreateStatus createStatus;
-                //Membership.CreateUser(model.UserName, model.Password, model.Email, null, null, true, null, out createStatus);
-
-
-                //New Member
-                string queryStringCommand = "insert into [ksalomon_list].[ksalo_list].[Member] (FirstName, LastName, Address, Address2, " +
-                "City, State, Zip, Email, Password, PhoneMobile, PhoneHome, PhoneBusiness, OrderID, DateCreated, DateUpdated) " +
-                "values ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')";
-
-                DataSet ds = new DataSet();
-                int memberID = 0;
-                StringBuilder items = new StringBuilder();
-                string memberInfo = string.Empty;
-                bool alreadyMember = false;
-
-                try
+                using (ksalomon_listEntities db = new ksalomon_listEntities())
                 {
-                    using (SqlConnection conn = new SqlConnection("Data Source=192.185.6.32;User Id=ksalo_list;Password=Ssvlsi123;Initial Catalog=ksalomon_list;"))
+                    // Create a new Order object.
+                    Member ord = new Member
+                    {                        
+                        OrderID = 0,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Address = model.Address,
+                        Address2 = model.Address2,
+                        City = model.City,
+                        State = model.State,
+                        Zip = model.Zip,
+                        Email = model.Email,
+                        Password = model.Password,
+                        PhoneMobile = model.PhoneMobile,                        
+                        DateCreated = DateTime.Now,
+                        DateUpdated = DateTime.Now                        
+                    };
+
+                    // Add the new object to the Members collection.
+                    db.Members.Add(ord);
+
+                    // Save the change to the database.
+                    try
                     {
-                        conn.Open();
-                        //Members
-                        SqlCommand CmdObj = new SqlCommand(string.Format(queryStringCommand, model.FirstName.Replace("'", "''"),
-                            model.LastName.Replace("'", "''"), model.Address.Replace("'", "''"), model.Address2.Replace("'", "''"),
-                            "Boca Raton"/*drpCity.SelectedValue.ToString()*/, model.State.Replace("'", "''"), model.Zip.Replace("'", "''"),
-                            model.Email.Replace("'", "''"), model.Password.Replace("'", "''"), model.PhoneMobile.Replace("'", "''"), ""/*model.PhoneHome.Replace("'", "''")*/, "", 0,
-                            DateTime.Now.ToString(), DateTime.Now.ToString()), conn);
-
-                        //memberID = (int)CmdObj.ExecuteScalar();
-                        CmdObj.ExecuteNonQuery();
-
-                        //lblMessage.Text = "Data has been Added! " + memberID.ToString();
+                        db.SaveChanges();
+                                                
+                        FormsAuthentication.SetAuthCookie(model.Email, false);
+                        return RedirectToAction("Index", "Home");                        
                     }
-
-                }
-                catch (Exception ex)
-                {
-                    //lblMessage.Text = "Error: " + ex.ToString();
-                    //LogErrorDB("0", "Failed Registration: " + ex.ToString(), "ERROR_REGISTER");
-                }
-
-                if (true/*createStatus == MembershipCreateStatus.Success*/)
-                {
-                    FormsAuthentication.SetAuthCookie(model.Email, false /* createPersistentCookie */);
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Error");
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", "Error: " + e.ToString());
+                    }
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        
         //
         // GET: /Account/ChangePassword
 
@@ -221,59 +209,6 @@ namespace Run4DeliveryMVC.Controllers
 
             
         }
-
-        /*private static bool ValidateUser(string userName, string passWord)
-        {
-            SqlConnection conn;
-            SqlCommand cmd;
-            string lookupPassword = null;
-
-            try
-            {
-                // Consult with your SQL Server administrator for an appropriate connection
-                // string to use to connect to your local SQL Server.
-                conn = new SqlConnection("Data Source=192.185.6.32;User Id=ksalo_list;Password=Ssvlsi123;Initial Catalog=ksalomon_list;");
-                conn.Open();
-
-                // Create SqlCommand to select pwd field from users table given supplied userName.
-                cmd = new SqlCommand("Select password from member where email = @userName", conn);
-                cmd.Parameters.Add("@userName", System.Data.SqlDbType.VarChar, 25);
-                cmd.Parameters["@userName"].Value = userName;
-
-                // Execute command and fetch pwd field into lookupPassword string.
-                lookupPassword = (string)cmd.ExecuteScalar();
-
-                // Cleanup command and connection objects.
-                cmd.Dispose();
-                conn.Dispose();
-            }
-            catch (Exception ex)
-            {
-                // Add error handling here for debugging.
-                // This error message should not be sent back to the caller.
-                //System.Diagnostics.Trace.WriteLine("[ValidateUser] Exception " + ex.Message);
-                //LogErrorDB("0", "Login Exception: " + ex.ToString(), "ERROR_LOGON");
-                //lblMsg.Text = ex.ToString();
-            }
-
-            // If no password found, return false.
-            if (null == lookupPassword)
-            {
-                // You could write failed login attempts here to event log for additional security.
-                //LogErrorDB("0", "Failed Login: " + userName + " " + passWord, "ERROR_LOGON");
-                return false;
-            }
-            if (lookupPassword.Trim() == passWord.Trim())
-            {
-                return true;
-            }
-            else
-            {
-                //LogErrorDB("0", "Failed Login: " + userName + " " + passWord, "ERROR_LOGON");
-                return false;
-            }
-        }*/
-        
 
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
